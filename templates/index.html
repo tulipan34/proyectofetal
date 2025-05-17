@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario FGR</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="text-center mb-5">Sistema de Predicción de fetal</h1>
+
+    
+          <div class="alert alert-{{ category }} mt-3" role="alert">
+           
+          </div>
+       
+
+    <!-- Botones -->
+    <div class="text-center mb-4">
+      <a href="#individual" class="btn btn-outline-primary btn-lg me-2">Predicción Individual</a>
+      <a href="#lotes" class="btn btn-outline-success btn-lg me-2">Predicción por Lotes</a>
+      <a href="/historial" class="btn btn-outline-info btn-lg">
+        <i class="bi bi-clock-history"></i> Ver Historial
+      </a>
+    </div>
+
+    <!-- FORMULARIO INDIVIDUAL -->
+    <div id="individual" class="card p-4 mb-5 shadow-sm">
+      <h4 class="mb-4">Predicción Individual</h4>
+
+      <form method="POST" action="/predecir_formulario">
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <label class="form-label">Selecciona modelo:</label>
+            <select class="form-select" name="modelo" required>
+              <option>Regresión Logística</option>
+              <option>Red Neuronal</option>
+              <option>SVM</option>
+              <option>Mapa Cognitivo Difuso</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <!-- Fila 1 -->
+          <div class="col-md-4">
+            <label class="form-label">Edad:</label>
+            <input type="number" name="C1" class="form-control" required min="18" max="45" value="{{ request.form.C1 or '' }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">IMC:</label>
+            <input type="number" name="C2" class="form-control" required min="0" max="50" value="{{ request.form.C2 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Edad gestacional al parto:</label>
+            <input type="number" name="C3" class="form-control" required min="20" max="42" value="{{ request.form.C3 or '' }}">
+          </div>
+
+          <!-- Fila 2 -->
+          <div class="col-md-4">
+            <label class="form-label">Gravidez:</label>
+            <input type="number" name="C4" class="form-control" required min="0" max="50" value="{{ request.form.C4 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Paridad:</label>
+            <input type="number" name="C5" class="form-control" required min="0" value="{{ request.form.C5 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Síntomas iniciales:</label>
+            <select name="C6" class="form-select" required>
+              <option value="0" {% if request.form.C6 == '0' %}selected{% endif %}>Edema</option>
+              <option value="1" {% if request.form.C6 == '1' %}selected{% endif %}>Hipertensión</option>
+              <option value="2" {% if request.form.C6 == '2' %}selected{% endif %}>FGR</option>
+            </select>
+          </div>
+
+          <!-- Fila 3 -->
+          <div class="col-md-4">
+            <label class="form-label">Edad gestacional del inicio de síntomas:</label>
+            <input type="number" name="C7" class="form-control" required min="0" value="{{ request.form.C7 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Días desde síntomas hasta parto:</label>
+            <input type="number" name="C8" class="form-control" required min="0" value="{{ request.form.C8 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Edad gestacional del inicio de hipertensión:</label>
+            <input type="number" name="C9" class="form-control" required min="0" value="{{ request.form.C9 or '' }}">
+          </div>
+
+          <!-- Fila 4 -->
+          <div class="col-md-4">
+            <label class="form-label">Días desde hipertensión hasta parto:</label>
+            <input type="number" name="C10" class="form-control" required min="0" value="{{ request.form.C10 or '' }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Edad gestacional del inicio de edema:</label>
+            <input type="number" name="C11" class="form-control" required min="0" value="{{ request.form.C11 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Días desde edema hasta parto:</label>
+            <input type="number" name="C12" class="form-control" required min="0" value="{{ request.form.C12 or '' }}">
+          </div>
+
+          <!-- Fila 5 -->
+          <div class="col-md-4">
+            <label class="form-label">Edad gestacional del inicio de proteinuria:</label>
+            <input type="number" name="C13" class="form-control" required min="0" value="{{ request.form.C13 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Días desde proteinuria hasta parto:</label>
+            <input type="number" name="C14" class="form-control" required min="0" value="{{ request.form.C14 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Tratamiento expectante:</label>
+            <select name="C15" class="form-select" required>
+              <option value="0" {% if request.form.C15 == '0' %}selected{% endif %}>No</option>
+              <option value="1" {% if request.form.C15 == '1' %}selected{% endif %}>Sí</option>
+            </select>
+          </div>
+
+          <!-- Fila 6 -->
+          <div class="col-md-4">
+            <label class="form-label">Antihipertensivos antes de hospitalización:</label>
+            <select name="C16" class="form-select" required>
+              <option value="0" {% if request.form.C16 == '0' %}selected{% endif %}>No</option>
+              <option value="1" {% if request.form.C16 == '1' %}selected{% endif %}>Sí</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Antecedentes:</label>
+            <select name="C17" class="form-select" required>
+              <option value="0" {% if request.form.C17 == '0' %}selected{% endif %}>Ninguno</option>
+              <option value="1" {% if request.form.C17 == '1' %}selected{% endif %}>Hipertensión</option>
+              <option value="2" {% if request.form.C17 == '2' %}selected{% endif %}>PCOS</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Presión sistólica máxima:</label>
+            <input type="number" name="C18" class="form-control" required min="120" value="{{ request.form.C18 or '' }}">
+          </div>
+
+          <!-- Fila 7 -->
+          <div class="col-md-4">
+            <label class="form-label">Presión diastólica máxima:</label>
+            <input type="number" name="C19" class="form-control" required min="80" max="170" value="{{ request.form.C19 or '' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Razón del parto:</label>
+            <select name="C20" class="form-select" required>
+              <option value="0" {% if request.form.C20 == '0' %}selected{% endif %}>HELLP</option>
+              <option value="1" {% if request.form.C20 == '1' %}selected{% endif %}>Sufrimiento fetal</option>
+              <option value="2" {% if request.form.C20 == '2' %}selected{% endif %}>Disfunción orgánica</option>
+              <option value="3" {% if request.form.C20 == '3' %}selected{% endif %}>Hipertensión no controlada</option>
+              <option value="4" {% if request.form.C20 == '4' %}selected{% endif %}>Edema</option>
+              <option value="5" {% if request.form.C20 == '5' %}selected{% endif %}>FGR</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Modo de parto:</label>
+            <select name="C21" class="form-select" required>
+              <option value="0" {% if request.form.C21 == '0' %}selected{% endif %}>Vaginal</option>
+              <option value="1" {% if request.form.C21 == '1' %}selected{% endif %}>Cesárea</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fila 8 -->
+<div class="row g-3">
+  <div class="col-md-4">
+    <label class="form-label">BNP máximo:</label>
+    <input type="number" name="C22" class="form-control" required min="0" placeholder="≥ 0" value="{{ request.form.C22 or '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Peso fetal al nacimiento (kg):</label>
+    <input type="number" name="C23" class="form-control" required min="2.5" max="4.0" step="0.01" placeholder="2.5 - 4.0" value="{{ request.form.C23 or '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Edad gestacional al nacimiento (semanas):</label>
+    <input type="number" name="C24" class="form-control" required min="22" max="42" placeholder="22 - 42" value="{{ request.form.C24 or '' }}">
+  </div>
+</div>
+
+<!-- Fila 7 -->
+<div class="row g-3 mt-3">
+  <div class="col-md-4">
+    <label class="form-label">Proteinuria máxima:</label>
+    <input type="number" name="C25" class="form-control" required min="0" placeholder="≥ 0" value="{{ request.form.C25 or '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Proteína total máxima:</label>
+    <input type="number" name="C26" class="form-control" required min="0" placeholder="≥ 0" value="{{ request.form.C26 or '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Albúmina máxima:</label>
+    <input type="number" name="C27" class="form-control" required min="0" placeholder="≥ 0" value="{{ request.form.C27 or '' }}">
+  </div>
+</div>
+
+<!-- Fila 8 -->
+<div class="row g-3 mt-3">
+  <div class="col-md-4">
+    <label class="form-label">ALT máxima:</label>
+    <input type="number" name="C28" class="form-control" required min="0" placeholder="≥ 0" value="{{ request.form.C28 or '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">AST máxima:</label>
+    <input type="number" name="C29" class="form-control" required min="0" placeholder="≥ 0" value="{{ request.form.C29 or '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Plaquetas máximas (x10^3/µL):</label>
+    <input type="number" name="C30" class="form-control" required min="150" max="400" placeholder="150 - 400" value="{{ request.form.C30 or '' }}">
+  </div>
+</div>
+
+
+       <div class="text-center mt-5">
+          <button type="submit" class="btn btn-primary btn-lg">Predecir</button>
+        </div>
+      </form>
+    </div>
+    <!-- FORMULARIO POR LOTES -->
+    <div id="lotes" class="card p-4 shadow-sm">
+      <h4 class="mb-4">Predicción por archivo Excel</h4>
+      <form method="POST" action="/predecir_archivo" enctype="multipart/form-data">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Selecciona modelo:</label>
+            <select class="form-select" name="modelo" required>
+              <option>Regresión Logística</option>
+              <option>Red Neuronal</option>
+              <option>SVM</option>
+              <option>Mapa Cognitivo Difuso</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Archivo (.xlsx):</label>
+            <input type="file" name="archivo" class="form-control" accept=".xlsx" required>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-success btn-lg">Subir y predecir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector('form[action="/predecir_formulario"]');
+    const btnEditar = document.getElementById('btnEditar');
+
+    btnEditar.addEventListener("click", function () {
+      form.querySelectorAll("input, select").forEach(element => {
+        element.disabled = false;
+      });
+      btnEditar.classList.add("d-none"); // Oculta el botón después de hacer clic
+    });
+
+    // Validación del formulario como ya la tenías
+    form.addEventListener('submit', function (event) {
+      let valid = true;
+
+      form.querySelectorAll('input[type="number"]').forEach(input => {
+        const value = parseFloat(input.value);
+        const min = parseFloat(input.min);
+        const max = parseFloat(input.max);
+
+        if (value < min || value > max || isNaN(value)) {
+          input.classList.add("is-invalid");
+          valid = false;
+        } else {
+          input.classList.remove("is-invalid");
+        }
+      });
+
+      if (!valid || !form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      form.classList.add('was-validated');
+    });
+  });
+</script>
+
+
+</body>
+</html>
